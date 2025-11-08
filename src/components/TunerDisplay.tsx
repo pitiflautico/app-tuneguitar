@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, Animated} from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
+import {LinearGradient} from 'expo-linear-gradient';
 import {TunerReading} from '../models/types';
 import {getTheme} from '../constants/themes';
 import {useApp} from '../context/AppContext';
