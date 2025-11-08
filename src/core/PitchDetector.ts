@@ -1,16 +1,13 @@
-import AudioRecorderPlayer from 'react-native-audio-recorder-player';
-import {getNoteFromFrequency} from '../constants/notes';
 import {TunerReading} from '../models/types';
+import {getNoteFromFrequency} from '../constants/notes';
 
 export class PitchDetector {
-  private audioRecorder: AudioRecorderPlayer;
   private isRecording: boolean = false;
   private callback: ((reading: TunerReading) => void) | null = null;
   private referenceFrequency: number = 440;
+  private intervalId: NodeJS.Timeout | null = null;
 
-  constructor() {
-    this.audioRecorder = new AudioRecorderPlayer();
-  }
+  constructor() {}
 
   async start(
     callback: (reading: TunerReading) => void,
@@ -24,86 +21,38 @@ export class PitchDetector {
       return;
     }
 
-    try {
-      this.isRecording = true;
+    this.isRecording = true;
 
-      // Start recording with metering enabled
-      await this.audioRecorder.startRecorder(undefined, {
-        SampleRate: 22050,
-        Channels: 1,
-        AudioQuality: 'High',
-        AudioEncoding: 'pcm_16bit',
-        MeteringEnabled: true,
-      });
+    // Simulación para demo - genera lecturas aleatorias
+    // En producción con Expo, usarías expo-av para audio real
+    this.intervalId = setInterval(() => {
+      if (this.callback) {
+        const randomFreq = 80 + Math.random() * 800;
+        const {note, octave, cents} = getNoteFromFrequency(
+          randomFreq,
+          this.referenceFrequency,
+        );
 
-      // Set up metering callback
-      this.audioRecorder.addRecordBackListener(result => {
-        if (result.currentMetering) {
-          // Simulate pitch detection from metering
-          // In a real implementation, you would process the audio buffer with FFT
-          const simulatedPitch = this.simulatePitchDetection(result.currentMetering, sensitivity);
+        const reading: TunerReading = {
+          frequency: randomFreq,
+          note,
+          octave,
+          cents,
+          isInTune: Math.abs(cents) < 10,
+        };
 
-          if (simulatedPitch > 0 && this.callback) {
-            const {note, octave, cents} = getNoteFromFrequency(
-              simulatedPitch,
-              this.referenceFrequency,
-            );
-
-            const reading: TunerReading = {
-              frequency: simulatedPitch,
-              note,
-              octave,
-              cents,
-              isInTune: Math.abs(cents) < 10, // Within 10 cents is considered in tune
-            };
-
-            this.callback(reading);
-          }
-        }
-      });
-    } catch (error) {
-      console.error('Error starting pitch detection:', error);
-      this.isRecording = false;
-    }
+        this.callback(reading);
+      }
+    }, 200);
   }
 
   async stop() {
-    if (!this.isRecording) {
-      return;
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
     }
-
-    try {
-      await this.audioRecorder.stopRecorder();
-      this.audioRecorder.removeRecordBackListener();
-      this.isRecording = false;
-      this.callback = null;
-    } catch (error) {
-      console.error('Error stopping pitch detection:', error);
-    }
-  }
-
-  // Simulated pitch detection (placeholder for real FFT-based detection)
-  private simulatePitchDetection(metering: number, sensitivity: number): number {
-    // This is a simplified simulation
-    // In a real app, you would:
-    // 1. Get PCM audio buffer
-    // 2. Apply window function (Hamming/Hann)
-    // 3. Perform FFT
-    // 4. Find peak frequency using autocorrelation or HPS
-    // 5. Refine pitch with parabolic interpolation
-
-    // For now, we'll use the metering to simulate detection
-    // Metering is typically in dB (negative values)
-    const normalizedMetering = Math.max(0, metering + 100) / 100; // Normalize to 0-1
-
-    if (normalizedMetering < sensitivity / 100) {
-      return 0; // Too quiet
-    }
-
-    // Simulate detecting frequencies in common guitar range (82-1318 Hz)
-    // This is just a placeholder - real implementation would analyze actual audio
-    const baseFreq = 82 + Math.random() * 400;
-    return baseFreq;
+    this.isRecording = false;
+    this.callback = null;
   }
 
   isActive(): boolean {
