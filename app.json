@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Guitar Tuna - Tuner",
+    "name": "Guitar Tuna",
     "slug": "guitar-tuna",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -16,19 +16,17 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.guitartuna.offline"
+      "bundleIdentifier": "com.guitartuna.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0A0E27"
       },
-      "package": "com.guitartuna.offline"
+      "package": "com.guitartuna.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     }
-  },
-  "name": "GuitarTuna",
-  "displayName": "Guitar Tuna - Tuner"
+  }
 }

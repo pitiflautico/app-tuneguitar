@@ -1,22 +1,11 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {StatusBar} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
-import mobileAds from 'react-native-google-mobile-ads';
 import {AppProvider, useApp} from './context/AppContext';
 import {AppNavigator} from './navigation/AppNavigator';
 import {getTheme} from './constants/themes';
-
-// Initialize AdMob
-mobileAds()
-  .initialize()
-  .then(adapterStatuses => {
-    console.log('AdMob initialized:', adapterStatuses);
-  })
-  .catch(error => {
-    console.error('AdMob initialization error:', error);
-  });
 
 const AppContent = () => {
   const {settings} = useApp();
