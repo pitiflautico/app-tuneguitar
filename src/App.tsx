@@ -1,35 +1,12 @@
 import React from 'react';
-import {View} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
-import {StatusBar} from 'expo-status-bar';
-import {AppProvider, useApp} from './context/AppContext';
-import {AppNavigator} from './navigation/AppNavigator';
+import {View, Text} from 'react-native';
 
-const AppContent = () => {
-  const {settings} = useApp();
-
+function App() {
   return (
-    <View style={{flex: 1}}>
-      <StatusBar style={settings.theme === 'light' ? 'dark' : 'light'} />
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#0A0E27'}}>
+      <Text style={{color: '#FFFFFF', fontSize: 24}}>Guitar Tuna</Text>
     </View>
   );
-};
-
-const App = () => {
-  return (
-    <GestureHandlerRootView style={{flex: 1}}>
-      <SafeAreaProvider>
-        <AppProvider>
-          <AppContent />
-        </AppProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
-  );
-};
+}
 
 export default App;
