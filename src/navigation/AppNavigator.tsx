@@ -1,4 +1,5 @@
 import React from 'react';
+import {Text} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {OnboardingScreen} from '../screens/OnboardingScreen';
@@ -77,8 +78,6 @@ const MainTabs = () => {
 const TabIcon: React.FC<{icon: string; color: string}> = ({icon}) => {
   return <Text style={{fontSize: 24}}>{icon}</Text>;
 };
-
-import {Text} from 'react-native';
 
 export const AppNavigator = () => {
   const {settings, isLoading} = useApp();
